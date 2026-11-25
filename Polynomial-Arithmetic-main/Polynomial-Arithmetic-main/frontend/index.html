@@ -15,11 +15,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Finite Field Lab</title>
   <link rel="stylesheet" href="./lab.css">
-  <link rel="stylesheet" href="./theme.css">
+  <link rel="stylesheet" href="./theme.css?v=3">
   <script type="module" src="./lab.js"></script>
-  <script type="module" src="./theme.js"></script>
-  <link rel="stylesheet" href="./visual.css">
-  <script type="module" src="./visual.js"></script>
+  <script type="module" src="./theme.js?v=3"></script>
+  <link rel="stylesheet" href="./visual.css?v=3">
+  <script type="module" src="./visual.js?v=3"></script>
 </head>
 <body>
   <header class="masthead">
@@ -45,6 +45,13 @@
       <a href="#compare" data-lab-tab="compare">Compare multiplication</a>
     </nav>
     <div data-lab-view="calculator">
+    <aside class="vl-welcome" id="vl-welcome" aria-label="Getting started" hidden>
+      <p><b>New to finite fields?</b> The Visual lab explains the ideas in five short screens, then lets you try your own numbers.</p>
+      <div class="vl-welcome-actions">
+        <a class="vl-welcome-go" href="#visual">Open the Visual lab</a>
+        <button type="button" class="quiet" id="vl-welcome-dismiss">Not now</button>
+      </div>
+    </aside>
     <section class="hero" aria-labelledby="page-title">
       <div>
         <h1 id="page-title" tabindex="-1">Polynomial arithmetic</h1>
@@ -350,66 +357,107 @@
       <section class="hero" aria-labelledby="visual-title">
         <div>
           <h1 id="visual-title" tabindex="-1">See the field move</h1>
-          <p>Three hands-on ways into GF(2<sup>m</sup>): a guided start for beginners, multiplication you can watch bit by bit, and a whole field you can spin.</p>
+          <p>Type any two numbers and watch how they add, multiply, divide and invert inside a binary field.</p>
         </div>
-        <div class="hero-math" aria-hidden="true"><span>g<sup>15</sup> = 1</span></div>
+        <div class="hero-math" aria-hidden="true"><span id="vl-hero-badge">GF(2<sup>8</sup>)</span></div>
       </section>
 
       <section class="panel vl-path" id="vl-path" aria-labelledby="vl-path-title">
         <div class="section-head">
           <div>
             <h2 id="vl-path-title">Start here</h2>
-            <p class="vl-lede">New to finite fields? Five short screens, one thing to try on each.</p>
+            <p class="vl-lede">New to finite fields? Five short screens with one thing to try on each. It takes about three minutes.</p>
           </div>
+          <button type="button" class="quiet" id="vl-path-toggle" aria-expanded="true" aria-controls="vl-path-body">Hide intro</button>
         </div>
-        <ol class="vl-path-nav" id="vl-path-nav"></ol>
-        <div class="vl-stage" id="vl-stage" aria-live="polite"></div>
-        <div class="vl-path-controls">
-          <button type="button" class="outline" id="vl-prev">Back</button>
-          <button type="button" class="primary" id="vl-next">Next</button>
+        <div id="vl-path-body">
+          <ol class="vl-path-nav" id="vl-path-nav"></ol>
+          <div class="vl-stage" id="vl-stage" aria-live="polite"></div>
+          <div class="vl-path-controls">
+            <button type="button" class="outline" id="vl-prev">Back</button>
+            <button type="button" class="primary" id="vl-next">Next</button>
+          </div>
         </div>
       </section>
 
-      <section class="panel vl-shift" id="vl-shift" aria-labelledby="vl-shift-title">
+      <section class="panel vl-explorer" id="vl-explorer" aria-labelledby="vl-explorer-title">
         <div class="section-head">
           <div>
-            <h2 id="vl-shift-title">Watch Shift-and-XOR in AES GF(2<sup>8</sup>)</h2>
-            <p class="vl-lede">A shifts left one bit per step. If a bit falls off the top, m(x) = x<sup>8</sup> + x<sup>4</sup> + x<sup>3</sup> + x + 1 cancels it. Wherever B has a 1, the shifted A is XORed into the result.</p>
+            <h2 id="vl-explorer-title">Explore your own numbers</h2>
+            <p class="vl-lede">Everything below updates as you type.</p>
           </div>
         </div>
-        <div class="vl-shift-inputs">
-          <label>A (hex)<input type="text" id="vl-a" value="57" maxlength="2" spellcheck="false" autocomplete="off"></label>
-          <label>B (hex)<input type="text" id="vl-b" value="83" maxlength="2" spellcheck="false" autocomplete="off"></label>
-          <div class="vl-shift-buttons">
-            <button type="button" class="primary" id="vl-play">Play</button>
-            <button type="button" class="outline" id="vl-step">Step</button>
-            <button type="button" class="quiet" id="vl-reset">Reset</button>
-            <label class="vl-speed">Speed
-              <select id="vl-speed"><option value="1600">Slow</option><option value="950" selected>Normal</option><option value="450">Fast</option></select>
+
+        <div class="vl-step">
+          <h3 class="vl-step-title"><span>1</span>Choose a field and two numbers</h3>
+          <div class="vl-inputs">
+            <label class="vl-input vl-input-field">Field
+              <select id="vl-field"></select>
             </label>
+            <label class="vl-input">A
+              <input type="text" id="vl-a" value="57" maxlength="200" spellcheck="false" autocomplete="off" aria-describedby="vl-input-hint">
+            </label>
+            <label class="vl-input">B
+              <input type="text" id="vl-b" value="83" maxlength="200" spellcheck="false" autocomplete="off" aria-describedby="vl-input-hint">
+            </label>
+            <div class="vl-input-actions">
+              <button type="button" class="outline" id="vl-random">Random numbers</button>
+              <button type="button" class="quiet" id="vl-swap">Swap A and B</button>
+            </div>
+          </div>
+          <p class="vl-hint" id="vl-input-hint">Type hex like <code>57</code>, binary like <code>0b1010111</code>, or a polynomial like <code>x^6 + x^4 + 1</code>. You can also click the bits below.</p>
+          <p class="vl-modline" id="vl-modline"></p>
+          <div class="vl-numbers">
+            <div class="vl-number a" id="vl-card-a"></div>
+            <div class="vl-number b" id="vl-card-b"></div>
           </div>
         </div>
-        <div class="visual-only">
-          <div class="vl-belt" id="vl-belt"></div>
-          <p class="vl-caption" id="vl-caption"></p>
-        </div>
-        <div class="classic-only" id="vl-shift-table"></div>
-      </section>
 
-      <section class="panel vl-ring-panel" id="vl-ring-panel" aria-labelledby="vl-ring-title">
-        <div class="section-head">
-          <div>
-            <h2 id="vl-ring-title">Spin the field GF(2<sup>4</sup>)</h2>
-            <p class="vl-lede">With m(x) = x<sup>4</sup> + x + 1, every nonzero element is a power of g = x. Multiplying by g moves one step around the ring, so multiplying is just turning.</p>
-          </div>
+        <div class="vl-step">
+          <h3 class="vl-step-title"><span>2</span>Pick a relation to see</h3>
+          <div class="vl-relations" id="vl-relations" role="group" aria-label="Relation to visualize"></div>
         </div>
-        <div class="vl-ring-layout">
-          <div class="visual-only vl-ring-stage" id="vl-ring-stage">
-            <div class="vl-ring" id="vl-ring"></div>
-            <p class="vl-hint">Drag to spin. Click an element to pick it.</p>
+
+        <div class="vl-step">
+          <h3 class="vl-step-title"><span>3</span>Watch how it works</h3>
+          <div class="vl-stage-head">
+            <p class="vl-stage-intro" id="vl-stage-intro"></p>
+            <div class="vl-stage-controls">
+              <div class="segments vl-mulview" id="vl-mulview" role="group" aria-label="How to show multiplication">
+                <button type="button" data-mulview="steps" aria-pressed="true">Shift-and-XOR</button>
+                <button type="button" data-mulview="ring" aria-pressed="false">Powers of g</button>
+              </div>
+              <button type="button" class="primary visual-only" id="vl-play">Play</button>
+              <button type="button" class="outline visual-only" id="vl-step">Step</button>
+              <button type="button" class="quiet visual-only" id="vl-replay">Replay</button>
+              <label class="vl-speed visual-only">Speed
+                <select id="vl-speed"><option value="1500">Slow</option><option value="900" selected>Normal</option><option value="420">Fast</option></select>
+              </label>
+              <a class="vl-calc-link" id="vl-calc-link" href="./">Open in Calculator</a>
+            </div>
           </div>
-          <div class="classic-only" id="vl-power-table"></div>
-          <aside class="vl-inspector" id="vl-inspector" aria-live="polite"></aside>
+
+          <div class="vl-pane" data-pane="add">
+            <div class="visual-only vl-board" id="vl-add-board"></div>
+            <div class="classic-only" id="vl-add-classic"></div>
+          </div>
+          <div class="vl-pane" data-pane="steps">
+            <div class="visual-only vl-board" id="vl-belt"></div>
+            <div class="classic-only" id="vl-steps-classic"></div>
+          </div>
+          <div class="vl-pane" data-pane="ring">
+            <div class="vl-ring-layout">
+              <div class="visual-only vl-ring-stage" id="vl-ring-stage" tabindex="0" aria-label="Field ring. Use the left and right arrow keys to turn it.">
+                <div class="vl-ring" id="vl-ring"></div>
+                <ul class="vl-legend" aria-hidden="true">
+                  <li class="a">A</li><li class="b">B</li><li class="r">Result</li><li class="one">1</li>
+                </ul>
+                <p class="vl-ring-hint">Drag to spin. Click a circle to set A.</p>
+              </div>
+              <div class="classic-only vl-power-wrap" id="vl-power-table"></div>
+            </div>
+          </div>
+          <div class="vl-caption" id="vl-caption" aria-live="polite"></div>
         </div>
       </section>
     </main>

@@ -1,4 +1,4 @@
-// Finite Field Lab — hero bit strip. Purely presentational: reads the modulus the app
+// Finite Field Lab: hero bit strip. Purely presentational: reads the modulus the app
 // already renders into #mod-bin and draws one cell per coefficient (amber = 1).
 const hero = document.querySelector('[data-lab-view="calculator"] .hero');
 const source = document.getElementById("mod-bin");

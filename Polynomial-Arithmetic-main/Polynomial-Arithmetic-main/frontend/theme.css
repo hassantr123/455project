@@ -1,10 +1,9 @@
 /*
- * Finite Field Lab — "Precision instrument" theme layer.
+ * Finite Field Lab: "Precision instrument" theme layer.
  * Loaded after lab.css. Only restyles; no structure, IDs or behaviour change.
  * Palette:  paper #F3F4F7 · ink #141A33 · ultramarine #3D38E0 · signal amber #F5B300 · rule #D4D8E2
- * Type:     Instrument Sans (interface) + JetBrains Mono (field elements, the actual data)
+ * Type:     IBM Plex Sans (interface) + JetBrains Mono (field elements, the actual data), self-hosted
  */
-@import url("https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400..700&family=JetBrains+Mono:wght@400;500;700&display=swap");
 
 :root {
   --paper: #f3f4f7;
@@ -18,7 +17,31 @@
   --amber: #f5b300;
   --teal: #f5b300;
   --mono: "JetBrains Mono", Consolas, monospace;
-  --sans: "Instrument Sans", "Segoe UI", system-ui, sans-serif;
+  /* Fonts are self-hosted in fonts/ (no third-party requests, works offline). */
+  --sans: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --font-sans: var(--sans);
+
+  /* Map lab.css design tokens onto this palette. */
+  --bg-canvas: var(--paper);
+  --surface-card: #fff;
+  --surface-tinted: #f0f1f5;
+  --surface-hover: #eeedfd;
+  --ink-secondary: #2a3150;
+  --border-strong: #b6bbca;
+  --blue-hover: #2c27a8;
+  --blue-deep: #2c27a8;
+  --accent-soft: #eeedfd;
+  --accent-border: #a5a2f2;
+  --focus-ring: #3d38e0;
+  --hero-start: #141a33;
+  --hero-mid: #141a33;
+  --hero-end: #141a33;
+  --info-bg: #eeedfd;
+  --info-border: #c4c2f3;
+  --info-ink: #2c27a8;
+  --neutral-bg: #f4f5f8;
+  --neutral-border: #d4d8e2;
+  --neutral-ink: #586079;
   --lift: 0 1px 0 rgba(20, 26, 51, .04), 0 8px 24px -16px rgba(20, 26, 51, .18);
   font-family: var(--sans);
   color: var(--ink);
@@ -295,3 +318,19 @@ table th { font-weight: 600; }
 }
 
 input[type="range"], input[type="checkbox"], input[type="radio"] { accent-color: var(--blue); }
+
+/* Headings receive focus from code after tab changes (for screen readers); no ring needed there. */
+h1[tabindex="-1"]:focus,
+h1[tabindex="-1"]:focus-visible,
+h2[tabindex="-1"]:focus,
+h2[tabindex="-1"]:focus-visible { outline: none; }
+
+/* Segmented controls: white pill on a grey track (overrides lab.css's solid blue pill). */
+.segments .sliding-pill {
+  background: #fff;
+  border: 1px solid var(--line);
+  box-shadow: 0 1px 2px rgba(20, 26, 51, .1);
+}
+.segments button[aria-pressed="true"] { background: #fff; color: var(--ink); }
+.segments.has-sliding-pill button[aria-pressed="true"],
+.segments.has-sliding-pill button[aria-pressed="true"]:hover:not(:disabled) { background: transparent; color: var(--ink); font-weight: 620; }

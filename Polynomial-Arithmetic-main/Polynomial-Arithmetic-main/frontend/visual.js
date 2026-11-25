@@ -1,4 +1,4 @@
-// Finite Field Lab — Visual lab (#visual) and the global Visual / Classic learning switch.
+// Finite Field Lab: Visual lab (#visual) and the global Visual / Classic learning switch.
 // Teaching layer only: small-field math (GF(2^2) … GF(2^8)) runs in the browser using the same
 // irreducible polynomials as backend/engine/fields.py. The backend and calculator are untouched.
 
@@ -415,7 +415,7 @@ function createExplorer() {
       b.setAttribute("aria-pressed", String(S.rel === r.id));
       b.innerHTML = `
         <span class="vl-rel-label">${r.label}</span>
-        <b class="vl-rel-value">${c.error ? "—" : `{${hx(c.value, S.f.m)}}`}</b>
+        <b class="vl-rel-value">${c.error ? "n/a" : `{${hx(c.value, S.f.m)}}`}</b>
         <span class="vl-rel-note">${c.error || c.note}</span>`;
     });
   }
